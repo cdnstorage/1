@@ -1,0 +1,57 @@
+.flowplayer, .navbar {
+  margin-bottom: 1.5rem;
+}
+
+a[href="https://flowplayer.com/hello/?from=player"], .fp-context-menu {
+  visibility: hidden !important;
+}
+
+.flowplayer, .fp-player {
+  background-color: hsl(0, 0%, 0%) !important;
+}
+
+.fp-color {
+  background-color: hsl(217, 71%, 53%) !important;
+}
+
+.image.is-centered {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.menu-list a:hover {
+  background-color: rgba(10, 10, 10, 0.1);
+}
+
+a:hover {
+  text-decoration: none !important;
+}
+
+.has-background-transparent {
+  background-color: transparent !important;
+}
+
+.x-overlay-toggle .is-overlay {
+  visibility: hidden;
+}
+
+.x-overlay-toggle:hover .is-overlay {
+  visibility: visible;
+}
+
+.x-centered {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.x-text-truncate {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.x-filter {
+  background-color: rgba(0, 0, 0, 0.8);
+}
