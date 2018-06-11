@@ -488,7 +488,7 @@
 
         Get('#search-input').on('keyup', function() {
             Get('#search-control').addClass('is-loading');
-            var $Temp = Get('#search-input').val().toLowerCase().replace(/\s+/, '');
+            var $Temp = Get('#search-input').val().toLowerCase().replace(/[^0-9a-zа-я]/gu, '');
             if ($Temp.length !== 0) {
                 var $HTML = '';
                 var $Index = 0;
