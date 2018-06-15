@@ -1,17 +1,30 @@
+::-webkit-scrollbar {
+    width: 0.5rem;
+}
+
+::-webkit-scrollbar-button, ::-webkit-scrollbar-corner, a[href="https://flowplayer.com/hello/?from=player"], .fp-context-menu {
+    display: none;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: rgba(245, 245, 245, 0.7);
+    border-radius: 0.5rem;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(245, 245, 245, 0.9);
+}
+
 .flowplayer, .navbar {
   margin-bottom: 1.5rem;
 }
 
-a[href="https://flowplayer.com/hello/?from=player"], .fp-context-menu {
-  visibility: hidden !important;
-}
-
-.flowplayer, .fp-player {
-  background-color: hsl(0, 0%, 0%) !important;
+::-webkit-scrollbar-track, ::-webkit-scrollbar-track-piece, .flowplayer, .fp-player {
+  background-color: hsl(0, 0%, 0%);
 }
 
 .fp-color {
-  background-color: hsl(217, 71%, 53%) !important;
+  background-color: hsl(217, 71%, 53%);
 }
 
 .image.is-centered {
