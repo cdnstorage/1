@@ -79,14 +79,14 @@
             '<i class="fas fa-play fa-2x"></i>' +
             '</span>' +
             '</div>' +
-            '<div class="is-overlay has-text-right">' +
-            (isUndefined($Temp['YEAR']) === true ? '' : CardTag($Temp['YEAR'])) +
-            (isUndefined($Temp['TRANSLATOR']) === true || $Temp['TRANSLATOR'] === null ? '' : CardTag($Temp['TRANSLATOR'])) +
-			(isUndefined($Temp['SEASON']) === true ? '' : CardTag('Сезон ' + $Temp['SEASON'])) +
-			(isUndefined($Temp['EPISODE']) === true ? '' : CardTag('Серия ' + $Temp['EPISODE'])) +
+            '<div class="is-overlay">' +
+            (isUndefined($Temp['YEAR']) === true ? '' : CardTag('Год: ' + $Temp['YEAR'])) +
+			(isUndefined($Temp['SOURCE_TYPE']) === true ? '' : CardTag('Качество: ' + $Temp['SOURCE_TYPE'])) +
+            (isUndefined($Temp['TRANSLATOR']) === true ? '' : CardTag('Перевод: ' + $Temp['TRANSLATOR'])) +
+			(isUndefined($Temp['SEASON']) === true ? '' : CardTag('Сезон: ' + $Temp['SEASON'])) +
+			(isUndefined($Temp['EPISODE']) === true ? '' : CardTag('Серия: ' + $Temp['EPISODE'])) +
 			(isUndefined($Temp['RATING_KINOPOISK']) === true ? '' : CardTag('КиноПоиск: ' + $Temp['RATING_KINOPOISK'])) +
 			(isUndefined($Temp['RATING_IMDB']) === true ? '' : CardTag('IMDb: ' + $Temp['RATING_IMDB'])) +
-            (isUndefined($Temp['SOURCE_TYPE']) === true || $Temp['SOURCE_TYPE'] === null ? '' : CardTag($Temp['SOURCE_TYPE'])) +
             (isUndefined($Temp['BAD_QUALITY']) === true || $Temp['BAD_QUALITY'] === '0' ? '' : CardTag('Плохое качество')) +
             (isUndefined($Temp['INSTREAM_ADS']) === true || $Temp['INSTREAM_ADS'] === '0' ? '' : CardTag('Встроенная реклама')) +
             (isUndefined($Temp['DIRECTORS_VERSION']) === true || $Temp['DIRECTORS_VERSION'] === '0' ? '' : CardTag('Расширенная версия')) +
@@ -492,7 +492,7 @@
 
         Get('#search-input').on('keyup', function() {
             Get('#search-control').addClass('is-loading');
-            var $Temp = Get('#search-input').val().toLowerCase().replace(/[^0-9a-zа-я]/gu, '');
+            var $Temp = Get('#search-input').val().toLowerCase().replace(/[^0-9a-zа-я]/g, '');
             if ($Temp.length !== 0) {
                 var $HTML = '';
                 var $Index = 0;
