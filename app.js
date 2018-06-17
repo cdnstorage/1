@@ -81,7 +81,11 @@
             '</div>' +
             '<div class="is-overlay has-text-right">' +
             (isUndefined($Temp['YEAR']) === true ? '' : CardTag($Temp['YEAR'])) +
-            (isUndefined($Temp['TRANSLATOR']) === true || $Temp['SOURCE_TYPE'] === null ? '' : CardTag($Temp['TRANSLATOR'])) +
+            (isUndefined($Temp['TRANSLATOR']) === true || $Temp['TRANSLATOR'] === null ? '' : CardTag($Temp['TRANSLATOR'])) +
+			(isUndefined($Temp['SEASON']) === true ? '' : CardTag('Сезон ' + $Temp['SEASON'])) +
+			(isUndefined($Temp['EPISODE']) === true ? '' : CardTag('Серия ' + $Temp['EPISODE'])) +
+			(isUndefined($Temp['RATING_KINOPOISK']) === true ? '' : CardTag('КиноПоиск: ' + $Temp['RATING_KINOPOISK'])) +
+			(isUndefined($Temp['RATING_IMDB']) === true ? '' : CardTag('IMDb: ' + $Temp['RATING_IMDB'])) +
             (isUndefined($Temp['SOURCE_TYPE']) === true || $Temp['SOURCE_TYPE'] === null ? '' : CardTag($Temp['SOURCE_TYPE'])) +
             (isUndefined($Temp['BAD_QUALITY']) === true || $Temp['BAD_QUALITY'] === '0' ? '' : CardTag('Плохое качество')) +
             (isUndefined($Temp['INSTREAM_ADS']) === true || $Temp['INSTREAM_ADS'] === '0' ? '' : CardTag('Встроенная реклама')) +
