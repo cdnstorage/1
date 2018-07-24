@@ -89,7 +89,7 @@
 		var node = window[id].lastElementChild;
 		var text = node.querySelector('.js-text');
 		
-		node.querySelector('.js-poster').setAttribute('src', getImageSource(data['KINOPOISK_ID'], data['WORLDART_ID']));
+		node.querySelector('.js-poster').src = getImageSource(data['KINOPOISK_ID'], data['WORLDART_ID']);
 		node.querySelector('.js-title').textContent = data['TITLE'];
 
 		cardTextHTML(text, 'Год: ', data['YEAR']);
@@ -168,7 +168,7 @@
 
 		window[pageId].classList.remove('is-hidden');
 
-		window['x-online-iframe'].removeAttribute('src');
+		window['x-online-iframe'].src = '';
 
 		if (appHistoryIndex === 0) {
 			window['x-previous'].classList.add('is-hidden');
@@ -277,7 +277,7 @@
 							selectedSource.children[0].classList.add('is-hidden');
 							selectedSource.children[1].classList.remove('is-hidden');
 
-							window['x-online-iframe'].setAttribute('src', 'https://egeria.space/?' + selectedSource.getAttribute('data-url'));
+							window['x-online-iframe'].src = 'https://egeria.space/?' + selectedSource.getAttribute('data-url');
 							window['x-online-iframe-container'].classList.remove('is-hidden');
 							
 							window.scrollTo(0, 0);
@@ -337,7 +337,7 @@
 		
 											selectedEpisode.classList.add('is-active');
 
-											window['x-online-iframe'].setAttribute('src', 'https://egeria.space/?' + appPageJSON[iCache]['SEASONS'][jCache]['EPISODES'][selectedEpisode.getAttribute('data-id')]['DATA']);
+											window['x-online-iframe'].src = 'https://egeria.space/?' + appPageJSON[iCache]['SEASONS'][jCache]['EPISODES'][selectedEpisode.getAttribute('data-id')]['DATA'];
 											window['x-online-iframe-container'].classList.remove('is-hidden');
 
 											window.scrollTo(0, 0);
@@ -406,7 +406,7 @@
 					insertContentTags(appPageJSON['DIRECTORS']);
 					insertContentTags(appPageJSON['STUDIOS']);
 
-					window['x-content-poster'].setAttribute('src', getImageSource(appPageJSON['CONTENT']['KINOPOISK_ID']));
+					window['x-content-poster'].src = getImageSource(appPageJSON['CONTENT']['KINOPOISK_ID']);
 					window['x-content-title'].textContent = appPageJSON['CONTENT']['TITLE'];
 					window['x-content-tagline'].textContent = appPageJSON['CONTENT']['TAGLINE'];
 					window['x-content-description'].textContent = appPageJSON['CONTENT']['DESCRIPTION'];
@@ -640,11 +640,11 @@
 		window['x-content-online'].addEventListener('click', showOnlinePage);
 
 		window['x-content-trailer'].addEventListener('click', function() {
-			window['x-trailer-iframe'].setAttribute('src', 'https://egeria.space/?' + appPageJSON['TRAILER']);
+			window['x-trailer-iframe'].src = 'https://egeria.space/?' + appPageJSON['TRAILER'];
 			window['x-trailer-modal'].classList.add('is-active');
 		});
 		window['x-trailer-modal-close'].addEventListener('click', function() {
-			window['x-trailer-iframe'].removeAttribute('src');
+			window['x-trailer-iframe'].src = '';
 			window['x-trailer-modal'].classList.remove('is-active');
 		});
 
