@@ -13,14 +13,14 @@
 	var appType;
 
 	var isUndefined = function(variable) {
-		return typeof variable === 'undefined';
+		return typeof(variable) === 'undefined';
 	};
 
 	var ajaxGet = function(path, callback) {
 		var ajax = new XMLHttpRequest();
 		ajax.open('get', path, true);
 		ajax.setRequestHeader('x-api', appType);
-		if (callback !== null) {
+		if (isUndefined(callback) === false) {
 			ajax.addEventListener('readystatechange', callback);
 		}
 		ajax.send();
@@ -31,14 +31,14 @@
 		ajax.open('post', path, true);
 		ajax.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
 		ajax.setRequestHeader('x-api', appType);
-		if (callback !== null) {
+		if (isUndefined(callback) === false) {
 			ajax.addEventListener('readystatechange', callback);
 		}
 		ajax.send(data);
 	};
 
 	var preload = function() {
-		ajaxPost('/api/v1/content.php', 'CONTENT_ID=' + this.getAttribute('data-id'), null);
+		ajaxPost('/api/v1/content.php', 'CONTENT_ID=' + this.getAttribute('data-id'));
 		this.removeEventListener('mouseenter', preload);
 	};
 
@@ -102,7 +102,7 @@
 		
 		node.setAttribute('data-id', data['CONTENT_ID']);
 		node.addEventListener('click', function() {
-			showContentPage(this.getAttribute('data-id'), null);
+			showContentPage(this.getAttribute('data-id'));
 		});
 		node.addEventListener('mouseenter', preload);
 	};
@@ -357,7 +357,7 @@
 	};
 
 	window['showContentPage'] = function(CONTENT_ID, noPrepare) {
-		if (noPrepare === null) {
+		if (isUndefined(noPrepare) === true) {
 			preparePage('showContentPage', [CONTENT_ID], 'x-content-page');
 		}
 		
@@ -392,7 +392,7 @@
 						window['x-content-trailer'].classList.remove('is-hidden');
 					}
 
-					ajaxPost('/api/v1/online.php', appOnline, null);
+					ajaxPost('/api/v1/online.php', appOnline);
 
 					while (window['x-content-tags'].firstChild !== null) {
 						window['x-content-tags'].removeChild(window['x-content-tags'].firstChild);
@@ -470,7 +470,7 @@
 	window['showMainPage'] = function() {
 		preparePage('showMainPage', [], 'x-main-page');
 
-		ajaxGet('json/search-' + appType, null);
+		ajaxGet('json/search-' + appType);
 
 		ajaxGet('/json/main-' + appType, function() {
 			if (this.readyState === 4 && this.status === 200) {
@@ -655,6 +655,9 @@
 		activateTab('main', 'x-main-tab-1', 'x-main-cards-1');
 		activateTab('main', 'x-main-tab-2', 'x-main-cards-2');
 		activateTab('main', 'x-main-tab-3', 'x-main-cards-3');
+
+		activateTab('user', 'x-user-tab-0', 'x-user-cards-0');
+		activateTab('user', 'x-user-tab-1', 'x-user-cards-1');
 
 		activateModal('x-support', 'x-support-modal', 'x-support-modal-close');
 		activateModal('x-help', 'x-help-modal', 'x-help-modal-close');
