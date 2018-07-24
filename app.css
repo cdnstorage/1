@@ -1,3 +1,7 @@
+* {
+  text-decoration: none !important;
+}
+
 ::-webkit-scrollbar {
     width: 0.5rem;
 }
@@ -37,10 +41,6 @@
   background-color: rgba(10, 10, 10, 0.1);
 }
 
-a:hover {
-  text-decoration: none !important;
-}
-
 .has-background-transparent {
   background-color: transparent !important;
 }
@@ -67,4 +67,47 @@ a:hover {
 
 .x-filter {
   background-color: rgba(0, 0, 0, 0.8);
+}
+
+.x-iframe-container {
+  padding-top: 56.25%;
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+  position: relative;
+  width: 100%;
+  height: 0;
+}
+
+.x-iframe {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.x-margin-left-10 {
+  margin-left: 10px;
+}
+
+.x-width-10 {
+  width: 10%;
+}
+
+.x-width-30 {
+  width: 30%;
+}
+
+.x-width-40 {
+  width: 40%;
+}
+
+.x-width-50 {
+  width: 50%;
+}
+
+.x-poster-text {
+  padding: 0.5em 0.5em;
 }
