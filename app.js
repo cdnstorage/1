@@ -515,7 +515,7 @@
 		});
 	};
 
-	var pageContentButton = function(id, method, data = '') {
+	var pageContentButton = function(id, method, data) {
 		var buttonId = 'x-content-' + id;
 		window[buttonId].addEventListener('click', function() {
 			window[buttonId].classList.add('is-loading');
@@ -662,8 +662,8 @@
 
 		pageContentButton('like', 'vote', '&VOTE=0');
 		pageContentButton('dislike', 'vote', '&VOTE=1');
-		pageContentButton('bookmark', 'bookmark');
-		pageContentButton('view', 'view');
+		pageContentButton('bookmark', 'bookmark', '');
+		pageContentButton('view', 'view', '');
 
 		activateCopy('x-support-copy-0', 'x-support-value-0');
 		activateCopy('x-support-copy-1', 'x-support-value-1');
