@@ -16,7 +16,7 @@
 		return typeof variable === 'undefined';
 	};
 
-	var ajaxGet = function(path, callback = null) {
+	var ajaxGet = function(path, callback) {
 		var ajax = new XMLHttpRequest();
 		ajax.open('get', path, true);
 		ajax.setRequestHeader('x-api', appType);
@@ -26,7 +26,7 @@
 		ajax.send();
 	};
 
-	var ajaxPost = function(path, data, callback = null) {
+	var ajaxPost = function(path, data, callback) {
 		var ajax = new XMLHttpRequest();
 		ajax.open('post', path, true);
 		ajax.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
@@ -38,7 +38,7 @@
 	};
 
 	var preload = function() {
-		ajaxPost('/api/v1/content.php', 'CONTENT_ID=' + this.getAttribute('data-id'));
+		ajaxPost('/api/v1/content.php', 'CONTENT_ID=' + this.getAttribute('data-id'), null);
 		this.removeEventListener('mouseenter', preload);
 	};
 
@@ -102,7 +102,7 @@
 		
 		node.setAttribute('data-id', data['CONTENT_ID']);
 		node.addEventListener('click', function() {
-			showContentPage(this.getAttribute('data-id'));
+			showContentPage(this.getAttribute('data-id'), null);
 		});
 		node.addEventListener('mouseenter', preload);
 	};
@@ -356,7 +356,7 @@
 		});
 	};
 
-	window['showContentPage'] = function(CONTENT_ID, noPrepare = null) {
+	window['showContentPage'] = function(CONTENT_ID, noPrepare) {
 		if (noPrepare === null) {
 			preparePage('showContentPage', [CONTENT_ID], 'x-content-page');
 		}
@@ -392,7 +392,7 @@
 						window['x-content-trailer'].classList.remove('is-hidden');
 					}
 
-					ajaxPost('/api/v1/online.php', appOnline);
+					ajaxPost('/api/v1/online.php', appOnline, null);
 
 					while (window['x-content-tags'].firstChild !== null) {
 						window['x-content-tags'].removeChild(window['x-content-tags'].firstChild);
@@ -470,7 +470,7 @@
 	window['showMainPage'] = function() {
 		preparePage('showMainPage', [], 'x-main-page');
 
-		ajaxGet('json/search-' + appType);
+		ajaxGet('json/search-' + appType, null);
 
 		ajaxGet('/json/main-' + appType, function() {
 			if (this.readyState === 4 && this.status === 200) {
