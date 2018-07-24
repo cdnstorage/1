@@ -280,7 +280,7 @@
 							window['x-online-iframe'].setAttribute('src', 'https://egeria.space/?' + selectedSource.getAttribute('data-url'));
 							window['x-online-iframe-container'].classList.remove('is-hidden');
 							
-							window['x-online-iframe-container'].scrollIntoView();
+							window.scrollTo(0, 0);
 						});
 					}
 
@@ -340,7 +340,7 @@
 											window['x-online-iframe'].setAttribute('src', 'https://egeria.space/?' + appPageJSON[iCache]['SEASONS'][jCache]['EPISODES'][selectedEpisode.getAttribute('data-id')]['DATA']);
 											window['x-online-iframe-container'].classList.remove('is-hidden');
 
-											window['x-online-iframe-container'].scrollIntoView();
+											window.scrollTo(0, 0);
 										});
 									}
 								});
@@ -558,7 +558,8 @@
 		var formId = buttonId + '-form';
 
 		window[buttonId].addEventListener('click', function() {
-			window[formId].classList.add('is-active');
+			window[formId].classList.remove('is-hidden');
+			window['x-guest-modal'].classList.add('is-active');
 		});
 		
 		window[formId].addEventListener('submit', function(event) {
@@ -577,7 +578,8 @@
 						window['x-guest-error'].classList.remove('is-hidden');
 						window['x-guest-error'].textContent = responseJSON['TEXT'];
 					} else {
-						showPageFromCache();
+						window['x-guest-modal'].classList.remove('is-active');
+						showPreviousPage();
 					}
 				}
 			});
