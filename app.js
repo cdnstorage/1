@@ -232,9 +232,9 @@
 			if (this.readyState === 4 && this.status === 200) {
 				appPageJSON = JSON.parse(this.response);
 
-				if (isUndefined(appPageJSON['GUEST']) === false) {
+				if (appPageJSON.hasOwnProperty('GUEST') === true) {
 					showGuestPage();
-				} else if (isUndefined(appPageJSON['ERROR']) === false) {
+				} else if (appPageJSON.hasOwnProperty('ERROR') === true) {
 					showError(appPageJSON['TEXT']);
 				} else if (appType === '0') {
 					while (window['x-online-sources'].firstChild !== null) {
@@ -253,13 +253,13 @@
 						tags.appendChild(sourceTagHTML('Дата: ' + appPageJSON[i]['TIMESTAMP']));
 						tags.appendChild(sourceTagHTML('Качество: ' + appPageJSON[i]['SOURCE_TYPE']));
 
-						if (isUndefined(appPageJSON[i]['BAD_QUALITY']) === false && appPageJSON[i]['BAD_QUALITY'] === '1') {
+						if (appPageJSON[i].hasOwnProperty('BAD_QUALITY') === true && appPageJSON[i]['BAD_QUALITY'] === '1') {
 							tags.appendChild(sourceTagHTML('Плохое качество'));
 						}
-						if (isUndefined(appPageJSON[i]['INSTREAM_ADS']) === false && appPageJSON[i]['INSTREAM_ADS'] === true) {
+						if (appPageJSON[i].hasOwnProperty('INSTREAM_ADS') === true && appPageJSON[i]['INSTREAM_ADS'] === '1') {
 							tags.appendChild(sourceTagHTML('Встроенная реклама'));
 						}
-						if (isUndefined(appPageJSON[i]['DIRECTORS_VERSION']) === false && appPageJSON[i]['DIRECTORS_VERSION'] === '1') {
+						if (appPageJSON[i].hasOwnProperty('DIRECTORS_VERSION') === true && appPageJSON[i]['DIRECTORS_VERSION'] === '1') {
 							tags.appendChild(sourceTagHTML('Расширенная версия'));
 						}
 
@@ -365,9 +365,9 @@
 			if (this.readyState === 4 && this.status === 200) {
 				appPageJSON = JSON.parse(this.response);
 
-				if (isUndefined(appPageJSON['GUEST']) === false) {
+				if (appPageJSON.hasOwnProperty('GUEST') === true) {
 					showGuestPage();
-				} else if (isUndefined(appPageJSON['ERROR']) === false) {
+				} else if (appPageJSON.hasOwnProperty('ERROR') === true) {
 					showError(appPageJSON['TEXT']);
 				} else {
 					var KINOPOISK_ID;
@@ -386,10 +386,10 @@
 
 					appOnline = 'KINOPOISK_ID=' + KINOPOISK_ID + '&WORLDART_ID=' + WORLDART_ID;
 
-					if (isUndefined(appPageJSON['TRAILER']) === true) {
-						window['x-content-trailer'].classList.add('is-hidden');
-					} else {
+					if (appPageJSON.hasOwnProperty('TRAILER') === true) {
 						window['x-content-trailer'].classList.remove('is-hidden');
+					} else {
+						window['x-content-trailer'].classList.add('is-hidden');
 					}
 
 					ajaxPost('/api/v1/online.php', appOnline);
@@ -435,7 +435,7 @@
 						window['x-content-bookmark-remove'].classList.remove('is-hidden');
 					}
 
-					if (isUndefined(appPageJSON['VOTE']) === true) {
+					if (appPageJSON.hasOwnProperty('VOTE') === false) {
 						window['x-content-dislike'].removeAttribute('disabled');
 						window['x-content-dislike-add'].classList.remove('is-hidden');
 						window['x-content-dislike-remove'].classList.add('is-hidden');
@@ -502,9 +502,9 @@
 			if (this.readyState === 4 && this.status === 200) {
 				appPageJSON = JSON.parse(this.response);
 
-				if (isUndefined(appPageJSON['GUEST']) === false) {
+				if (appPageJSON.hasOwnProperty('GUEST') === true) {
 					showGuestPage();
-				} else if (isUndefined(appPageJSON['ERROR']) === false) {
+				} else if (appPageJSON.hasOwnProperty('ERROR') === true) {
 					showError(appPageJSON['TEXT']);
 				} else {
 					insertCards('x-user-cards-');
@@ -524,9 +524,9 @@
 				if (this.readyState === 4 && this.status === 200) {
 					var responseJSON = JSON.parse(this.response);
 
-					if (isUndefined(responseJSON['GUEST']) === false) {
+					if (responseJSON.hasOwnProperty('GUEST') === true) {
 						showGuestPage();
-					} else if (isUndefined(responseJSON['ERROR']) === false) {
+					} else if (responseJSON.hasOwnProperty('ERROR') === true) {
 						showError(responseJSON['TEXT']);
 					} else {
 						showContentPage(appPageJSON['CONTENT']['CONTENT_ID'], true);
@@ -574,7 +574,7 @@
 					window[formId + '-submit'].classList.remove('is-loading');
 					window['x-guest-error'].classList.add('is-hidden');
 
-					if (isUndefined(responseJSON['ERROR']) === false) {
+					if (responseJSON.hasOwnProperty('ERROR') === true) {
 						window['x-guest-error'].classList.remove('is-hidden');
 						window['x-guest-error'].textContent = responseJSON['TEXT'];
 					} else {
@@ -650,6 +650,9 @@
 
 		selectedTab['main'] = 'x-main-tab-0';
 		selectedTabContent['main'] = 'x-main-cards-0';
+
+		selectedTab['user'] = 'x-user-tab-0';
+		selectedTabContent['user'] = 'x-user-cards-0';
 
 		activateTab('main', 'x-main-tab-0', 'x-main-cards-0');
 		activateTab('main', 'x-main-tab-1', 'x-main-cards-1');
