@@ -1,19 +1,28 @@
 (function() {
 	'use strict';
 
+	var appElements = {};
+
 	var selectedTab = {};
 	var selectedTabContent = {};
 
+	var appType;
 	var appOnline;
 	var appPageJSON;
 
 	var appHistory = [];
 	var appHistoryIndex = 0;
 
-	var appType;
-
 	var isUndefined = function(variable) {
 		return typeof(variable) === 'undefined';
+	};
+
+	var getElement = function(id) {
+		if (appElements.hasOwnProperty(id) === false) {
+			appElements[id] = document.getElementById(id);
+		}
+		
+		return appElements[id];
 	};
 
 	var ajaxGet = function(path, callback) {
@@ -53,20 +62,24 @@
 		a.textContent = textContent;
 		a.setAttribute('data-id', dataId);
 		li.appendChild(a);
-		window[id].appendChild(li);
-		return window[id].lastElementChild.lastElementChild;
+		getElement(id).appendChild(li);
+
+		return getElement(id).lastElementChild.lastElementChild;
 	};
 
 	var sourceTagHTML = function(textContent) {
 		var span = document.createElement('span');
-		span.classList.add('tag', 'is-dark');
+
+		span.className = 'tag is-dark';
 		span.textContent = textContent;
+
 		return span;
 	};
 
 	var tagHTML = function(textContent) {
 		var a = document.createElement('a');
-		a.classList.add('tag');
+		
+		a.className  = 'tag';
 		a.textContent = textContent;
 		return a;
 	};
@@ -76,6 +89,7 @@
 			var strong = document.createElement('strong');
 			var text = document.createTextNode(textValue);
 			var br = document.createElement('br');
+			
 			strong.textContent = strongText;
 			element.appendChild(strong);
 			element.appendChild(text);
@@ -84,9 +98,9 @@
 	};
 
 	var insertCard = function(id, data) {
-		window[id].appendChild(window['x-card-template'].content.cloneNode(true));
+		getElement(id).appendChild(getElement('x-card-template').content.cloneNode(true));
 
-		var node = window[id].lastElementChild;
+		var node = getElement(id).lastElementChild;
 		var text = node.querySelector('.js-text');
 		
 		node.querySelector('.js-poster').src = getImageSource(data['KINOPOISK_ID'], data['WORLDART_ID']);
@@ -111,8 +125,8 @@
 		for (var i = 0, iMax = appPageJSON.length; i !== iMax; i++) {
 			var id = prefix + i.toString();
 
-			while (window[id].firstChild !== null) {
-				window[id].removeChild(window[id].firstChild);
+			while (getElement(id).firstChild !== null) {
+				getElement(id).removeChild(getElement(id).firstChild);
 			}
 
 			for (var j = 0, jMax = appPageJSON[i].length; j !== jMax; j++) {
@@ -124,19 +138,19 @@
 	var insertContentTags = function(argument) {
 		if (isUndefined(argument) === false) {
 			for (var i = 0, length = argument.length; i !== length; i++) {
-				window['x-content-tags'].appendChild(tagHTML(argument[i]['NAME']));
+				getElement('x-content-tags').appendChild(tagHTML(argument[i]['NAME']));
 			}
 		}
 	};
 
 	var showError = function(errorText) {
-		window['x-error-modal'].classList.add('is-active');
-		window['x-error-modal-text'].textContent = errorText;		
+		getElement('x-error-modal').classList.add('is-active');
+		getElement('x-error-modal-text').textContent = errorText;		
 	};
 
 	var startApp = function(type) {
 		appType = type;
-		window['x-sites-modal'].classList.remove('is-active');
+		getElement('x-sites-modal').classList.remove('is-active');
 		var historyJSON = window.sessionStorage.getItem('history-' + appType);
 		if (historyJSON !== null) {
 			appHistory = JSON.parse(historyJSON);
@@ -146,40 +160,37 @@
 	};
 
 	var activateTab = function(pageId, tabId, contentId) {
-		window[tabId].addEventListener('click', function() {
-			window[selectedTab[pageId]].classList.remove('is-active');
+		getElement(tabId).addEventListener('click', function() {
+			getElement(selectedTab[pageId]).classList.remove('is-active');
 			selectedTab[pageId] = tabId;
-			window[selectedTab[pageId]].classList.add('is-active');
+			getElement(selectedTab[pageId]).classList.add('is-active');
 
-			window[selectedTabContent[pageId]].classList.add('is-hidden');
+			getElement(selectedTabContent[pageId]).classList.add('is-hidden');
 			selectedTabContent[pageId] = contentId;
-			window[	selectedTabContent[pageId]].classList.remove('is-hidden');
+			getElement(selectedTabContent[pageId]).classList.remove('is-hidden');
 		});
 	};
 
 	var preparePage = function(functionName, argumentsArray, pageId) {
-		window['x-pageloader'].classList.add('is-active');
-		window['x-guest-page'].classList.add('is-hidden');
-		window['x-online-page'].classList.add('is-hidden');
-		window['x-content-page'].classList.add('is-hidden');
-		window['x-main-page'].classList.add('is-hidden');
-		window['x-search-page'].classList.add('is-hidden');
-		window['x-user-page'].classList.add('is-hidden');
+		getElement('x-pageloader').classList.add('is-active');
+		getElement('x-guest-page').classList.add('is-hidden');
+		getElement('x-online-page').classList.add('is-hidden');
+		getElement('x-content-page').classList.add('is-hidden');
+		getElement('x-main-page').classList.add('is-hidden');
+		getElement('x-search-page').classList.add('is-hidden');
+		getElement('x-user-page').classList.add('is-hidden');
 
-		window[pageId].classList.remove('is-hidden');
+		getElement(pageId).classList.remove('is-hidden');
 
-		window['x-online-iframe'].src = '';
+		getElement('x-online-iframe').src = 'data:,';
 
 		if (appHistoryIndex === 0) {
-			window['x-previous'].classList.add('is-hidden');
+			getElement('x-previous').classList.add('is-hidden');
 		} else {
-			window['x-previous'].classList.remove('is-hidden');
+			getElement('x-previous').classList.remove('is-hidden');
 		}
 
-		appHistory[appHistoryIndex++] = {
-			'function': functionName,
-			'arguments': argumentsArray
-		};
+		appHistory[appHistoryIndex++] = [functionName, argumentsArray];
 
 		window.sessionStorage.setItem('history-' + appType, JSON.stringify(appHistory));
 	};
@@ -187,12 +198,12 @@
 	var showPageFromCache = function() {
 		if (appHistoryIndex === 0) {
 			return showMainPage();
-		} else if (appHistory[appHistoryIndex]['arguments'].length === 0) {
-			return window[appHistory[appHistoryIndex]['function']]();
-		} else if (appHistory[appHistoryIndex]['arguments'].length === 1) {
-			return window[appHistory[appHistoryIndex]['function']](appHistory[appHistoryIndex]['arguments'][0]);
-		} else if (appHistory[appHistoryIndex]['arguments'].length === 2) {
-			return window[appHistory[appHistoryIndex]['function']](appHistory[appHistoryIndex]['arguments'][0], appHistory[appHistoryIndex]['arguments'][1]);
+		} else if (appHistory[appHistoryIndex][1].length === 0) {
+			return window[appHistory[appHistoryIndex][0]]();
+		} else if (appHistory[appHistoryIndex][1].length === 1) {
+			return window[appHistory[appHistoryIndex][0]](appHistory[appHistoryIndex][1][0]);
+		} else if (appHistory[appHistoryIndex][1].length === 2) {
+			return window[appHistory[appHistoryIndex][0]](appHistory[appHistoryIndex][1][0], appHistory[appHistoryIndex][1][1]);
 		} else {
 			return showMainPage();
 		}
@@ -210,7 +221,7 @@
 	window['showGuestPage'] = function() {
 		preparePage('showGuestPage', [], 'x-guest-page');
 
-		window['x-pageloader'].classList.remove('is-active');
+		getElement('x-pageloader').classList.remove('is-active');
 	};
 
 	window['showOnlinePage'] = function(argument) {
@@ -218,9 +229,9 @@
 			appOnline = argument;
 		}
 
-		window['x-online-iframe-container'].classList.add('is-hidden');
-		window['x-online-sources'].classList.add('is-hidden');
-		window['x-online-menu'].classList.add('is-hidden');
+		getElement('x-online-iframe-container').classList.add('is-hidden');
+		getElement('x-online-sources').classList.add('is-hidden');
+		getElement('x-online-menu').classList.add('is-hidden');
 
 		preparePage('showOnlinePage', [appOnline], 'x-online-page');
 
@@ -237,14 +248,14 @@
 				} else if (appPageJSON.hasOwnProperty('ERROR') === true) {
 					showError(appPageJSON['TEXT']);
 				} else if (appType === '0') {
-					while (window['x-online-sources'].firstChild !== null) {
-						window['x-online-sources'].removeChild(window['x-online-sources'].firstChild);
+					while (getElement('x-online-sources').firstChild !== null) {
+						getElement('x-online-sources').removeChild(getElement('x-online-sources').firstChild);
 					}
 
 					for (var i = 0, iMax = appPageJSON.length; i !== iMax; i++) {
-						window['x-online-sources'].appendChild(window['x-source-template'].content.cloneNode(true));
+						getElement('x-online-sources').appendChild(getElement('x-source-template').content.cloneNode(true));
 						
-						var node = window['x-online-sources'].lastElementChild;
+						var node = getElement('x-online-sources').lastElementChild;
 						var tags = node.querySelector('.js-tags');
 						var button = node.querySelector('.js-button');
 
@@ -277,23 +288,23 @@
 							selectedSource.children[0].classList.add('is-hidden');
 							selectedSource.children[1].classList.remove('is-hidden');
 
-							window['x-online-iframe'].src = 'https://egeria.space/?' + selectedSource.getAttribute('data-url');
-							window['x-online-iframe-container'].classList.remove('is-hidden');
+							getElement('x-online-iframe').src = 'https://egeria.space/?' + selectedSource.getAttribute('data-url');
+							getElement('x-online-iframe-container').classList.remove('is-hidden');
 							
 							window.scrollTo(0, 0);
 						});
 					}
 
-					window['x-online-sources'].classList.remove('is-hidden');
+					getElement('x-online-sources').classList.remove('is-hidden');
 				} else if (appType === '1') {
-					while (window['x-online-translators'].firstChild !== null) {
-						window['x-online-translators'].removeChild(window['x-online-translators'].firstChild);
+					while (getElement('x-online-translators').firstChild !== null) {
+						getElement('x-online-translators').removeChild(getElement('x-online-translators').firstChild);
 					}
-					while (window['x-online-seasons'].firstChild !== null) {
-						window['x-online-seasons'].removeChild(window['x-online-seasons'].firstChild);
+					while (getElement('x-online-seasons').firstChild !== null) {
+						getElement('x-online-seasons').removeChild(getElement('x-online-seasons').firstChild);
 					}
-					while (window['x-online-episodes'].firstChild !== null) {
-						window['x-online-episodes'].removeChild(window['x-online-episodes'].firstChild);
+					while (getElement('x-online-episodes').firstChild !== null) {
+						getElement('x-online-episodes').removeChild(getElement('x-online-episodes').firstChild);
 					}
 
 					for (var i = 0, iMax = appPageJSON.length; i !== iMax; i++) {
@@ -301,11 +312,11 @@
 							if (selectedTranslator !== null) {
 								selectedTranslator.classList.remove('is-active');
 
-								while (window['x-online-seasons'].firstChild !== null) {
-									window['x-online-seasons'].removeChild(window['x-online-seasons'].firstChild);
+								while (getElement('x-online-seasons').firstChild !== null) {
+									getElement('x-online-seasons').removeChild(getElement('x-online-seasons').firstChild);
 								}
-								while (window['x-online-episodes'].firstChild !== null) {
-									window['x-online-episodes'].removeChild(window['x-online-episodes'].firstChild);
+								while (getElement('x-online-episodes').firstChild !== null) {
+									getElement('x-online-episodes').removeChild(getElement('x-online-episodes').firstChild);
 								}
 							}
 
@@ -318,8 +329,8 @@
 									if (selectedSeason !== null) {
 										selectedSeason.classList.remove('is-active');
 		
-										while (window['x-online-episodes'].firstChild !== null) {
-											window['x-online-episodes'].removeChild(window['x-online-episodes'].firstChild);
+										while (getElement('x-online-episodes').firstChild !== null) {
+											getElement('x-online-episodes').removeChild(getElement('x-online-episodes').firstChild);
 										}
 									}
 
@@ -337,8 +348,8 @@
 		
 											selectedEpisode.classList.add('is-active');
 
-											window['x-online-iframe'].src = 'https://egeria.space/?' + appPageJSON[iCache]['SEASONS'][jCache]['EPISODES'][selectedEpisode.getAttribute('data-id')]['DATA'];
-											window['x-online-iframe-container'].classList.remove('is-hidden');
+											getElement('x-online-iframe').src = 'https://egeria.space/?' + appPageJSON[iCache]['SEASONS'][jCache]['EPISODES'][selectedEpisode.getAttribute('data-id')]['DATA'];
+											getElement('x-online-iframe-container').classList.remove('is-hidden');
 
 											window.scrollTo(0, 0);
 										});
@@ -348,10 +359,10 @@
 						});
 					}
 
-					window['x-online-menu'].classList.remove('is-hidden');
+					getElement('x-online-menu').classList.remove('is-hidden');
 				}
 
-				window['x-pageloader'].classList.remove('is-active');
+				getElement('x-pageloader').classList.remove('is-active');
 			}
 		});
 	};
@@ -387,18 +398,18 @@
 					appOnline = 'KINOPOISK_ID=' + KINOPOISK_ID + '&WORLDART_ID=' + WORLDART_ID;
 
 					if (appPageJSON.hasOwnProperty('TRAILER') === true) {
-						window['x-content-trailer'].classList.remove('is-hidden');
+						getElement('x-content-trailer').classList.remove('is-hidden');
 					} else {
-						window['x-content-trailer'].classList.add('is-hidden');
+						getElement('x-content-trailer').classList.add('is-hidden');
 					}
 
 					ajaxPost('/api/v1/online.php', appOnline);
 
-					while (window['x-content-tags'].firstChild !== null) {
-						window['x-content-tags'].removeChild(window['x-content-tags'].firstChild);
+					while (getElement('x-content-tags').firstChild !== null) {
+						getElement('x-content-tags').removeChild(getElement('x-content-tags').firstChild);
 					}
 
-					window['x-content-tags'].appendChild(tagHTML(appPageJSON['CONTENT']['YEAR']));
+					getElement('x-content-tags').appendChild(tagHTML(appPageJSON['CONTENT']['YEAR']));
 
 					insertContentTags(appPageJSON['GENRES']);
 					insertContentTags(appPageJSON['COUNTRIES']);
@@ -406,63 +417,63 @@
 					insertContentTags(appPageJSON['DIRECTORS']);
 					insertContentTags(appPageJSON['STUDIOS']);
 
-					window['x-content-poster'].src = getImageSource(appPageJSON['CONTENT']['KINOPOISK_ID']);
-					window['x-content-title'].textContent = appPageJSON['CONTENT']['TITLE'];
-					window['x-content-tagline'].textContent = appPageJSON['CONTENT']['TAGLINE'];
-					window['x-content-description'].textContent = appPageJSON['CONTENT']['DESCRIPTION'];
-					window['x-content-rating-kinopoisk'].textContent = appPageJSON['CONTENT']['RATING_KINOPOISK'];
-					window['x-content-rating-imdb'].textContent = appPageJSON['CONTENT']['RATING_IMDB'];
-					window['x-content-hits'].textContent = appPageJSON['CONTENT']['HITS'];
-					window['x-content-bookmarks'].textContent = appPageJSON['CONTENT']['BOOKMARKS'];
-					window['x-content-views'].textContent = appPageJSON['CONTENT']['VIEWS'];
-					window['x-content-comments'].textContent = appPageJSON['CONTENT']['COMMENTS'];
-					window['x-content-likes'].textContent = appPageJSON['CONTENT']['LIKES'];
-					window['x-content-dislikes'].textContent = appPageJSON['CONTENT']['DISLIKES'];
+					getElement('x-content-poster').src = getImageSource(appPageJSON['CONTENT']['KINOPOISK_ID']);
+					getElement('x-content-title').textContent = appPageJSON['CONTENT']['TITLE'];
+					getElement('x-content-tagline').textContent = appPageJSON['CONTENT']['TAGLINE'];
+					getElement('x-content-description').textContent = appPageJSON['CONTENT']['DESCRIPTION'];
+					getElement('x-content-rating-kinopoisk').textContent = appPageJSON['CONTENT']['RATING_KINOPOISK'];
+					getElement('x-content-rating-imdb').textContent = appPageJSON['CONTENT']['RATING_IMDB'];
+					getElement('x-content-hits').textContent = appPageJSON['CONTENT']['HITS'];
+					getElement('x-content-bookmarks').textContent = appPageJSON['CONTENT']['BOOKMARKS'];
+					getElement('x-content-views').textContent = appPageJSON['CONTENT']['VIEWS'];
+					getElement('x-content-comments').textContent = appPageJSON['CONTENT']['COMMENTS'];
+					getElement('x-content-likes').textContent = appPageJSON['CONTENT']['LIKES'];
+					getElement('x-content-dislikes').textContent = appPageJSON['CONTENT']['DISLIKES'];
 					
 					if (appPageJSON['VIEWED'] === null) {
-						window['x-content-view-add'].classList.remove('is-hidden');
-						window['x-content-view-remove'].classList.add('is-hidden');
+						getElement('x-content-view-add').classList.remove('is-hidden');
+						getElement('x-content-view-remove').classList.add('is-hidden');
 					} else {
-						window['x-content-view-add'].classList.add('is-hidden');
-						window['x-content-view-remove'].classList.remove('is-hidden');
+						getElement('x-content-view-add').classList.add('is-hidden');
+						getElement('x-content-view-remove').classList.remove('is-hidden');
 					}
 
 					if (appPageJSON['BOOKMARKED'] === null) {
-						window['x-content-bookmark-add'].classList.remove('is-hidden');
-						window['x-content-bookmark-remove'].classList.add('is-hidden');
+						getElement('x-content-bookmark-add').classList.remove('is-hidden');
+						getElement('x-content-bookmark-remove').classList.add('is-hidden');
 					} else {
-						window['x-content-bookmark-add'].classList.add('is-hidden');
-						window['x-content-bookmark-remove'].classList.remove('is-hidden');
+						getElement('x-content-bookmark-add').classList.add('is-hidden');
+						getElement('x-content-bookmark-remove').classList.remove('is-hidden');
 					}
 
 					if (appPageJSON.hasOwnProperty('VOTE') === false) {
-						window['x-content-dislike'].removeAttribute('disabled');
-						window['x-content-dislike-add'].classList.remove('is-hidden');
-						window['x-content-dislike-remove'].classList.add('is-hidden');
+						getElement('x-content-dislike').removeAttribute('disabled');
+						getElement('x-content-dislike-add').classList.remove('is-hidden');
+						getElement('x-content-dislike-remove').classList.add('is-hidden');
 
-						window['x-content-like'].removeAttribute('disabled');
-						window['x-content-like-add'].classList.remove('is-hidden');
-						window['x-content-like-remove'].classList.add('is-hidden');
+						getElement('x-content-like').removeAttribute('disabled');
+						getElement('x-content-like-add').classList.remove('is-hidden');
+						getElement('x-content-like-remove').classList.add('is-hidden');
 					} else if (appPageJSON['VOTE']['LIKE'] === null) {
-						window['x-content-dislike'].setAttribute('disabled', '');
-						window['x-content-dislike-add'].classList.add('is-hidden');
-						window['x-content-dislike-remove'].classList.remove('is-hidden');
+						getElement('x-content-dislike').setAttribute('disabled', '');
+						getElement('x-content-dislike-add').classList.add('is-hidden');
+						getElement('x-content-dislike-remove').classList.remove('is-hidden');
 
-						window['x-content-like'].removeAttribute('disabled');
-						window['x-content-like-add'].classList.remove('is-hidden');
-						window['x-content-like-remove'].classList.add('is-hidden');
+						getElement('x-content-like').removeAttribute('disabled');
+						getElement('x-content-like-add').classList.remove('is-hidden');
+						getElement('x-content-like-remove').classList.add('is-hidden');
 					} else if (appPageJSON['VOTE']['DISLIKE'] === null) {
-						window['x-content-dislike'].removeAttribute('disabled');
-						window['x-content-dislike-add'].classList.remove('is-hidden');
-						window['x-content-dislike-remove'].classList.add('is-hidden');
+						getElement('x-content-dislike').removeAttribute('disabled');
+						getElement('x-content-dislike-add').classList.remove('is-hidden');
+						getElement('x-content-dislike-remove').classList.add('is-hidden');
 
-						window['x-content-like'].setAttribute('disabled', '');
-						window['x-content-like-add'].classList.add('is-hidden');
-						window['x-content-like-remove'].classList.remove('is-hidden');
+						getElement('x-content-like').setAttribute('disabled', '');
+						getElement('x-content-like-add').classList.add('is-hidden');
+						getElement('x-content-like-remove').classList.remove('is-hidden');
 					}
 				}
 
-				window['x-pageloader'].classList.remove('is-active');
+				getElement('x-pageloader').classList.remove('is-active');
 			}
 		});
 	};
@@ -478,7 +489,7 @@
 
 				insertCards('x-main-cards-');
 				
-				window['x-pageloader'].classList.remove('is-active');
+				getElement('x-pageloader').classList.remove('is-active');
 			}
 		});
 	};
@@ -490,7 +501,7 @@
 			if (this.readyState === 4 && this.status === 200) {
 				appPageJSON = JSON.parse(this.response);
 				
-				window['x-pageloader'].classList.remove('is-active');
+				getElement('x-pageloader').classList.remove('is-active');
 			}
 		});
 	};
@@ -510,15 +521,15 @@
 					insertCards('x-user-cards-');
 				}
 
-				window['x-pageloader'].classList.remove('is-active');
+				getElement('x-pageloader').classList.remove('is-active');
 			}
 		});
 	};
 
 	var pageContentButton = function(id, method, data) {
 		var buttonId = 'x-content-' + id;
-		window[buttonId].addEventListener('click', function() {
-			window[buttonId].classList.add('is-loading');
+		getElement(buttonId).addEventListener('click', function() {
+			getElement(buttonId).classList.add('is-loading');
 
 			ajaxPost('/api/v1/' + method + '.php', 'CONTENT_ID=' + appPageJSON['CONTENT']['CONTENT_ID'] + data, function() {
 				if (this.readyState === 4 && this.status === 200) {
@@ -530,7 +541,7 @@
 						showError(responseJSON['TEXT']);
 					} else {
 						showContentPage(appPageJSON['CONTENT']['CONTENT_ID'], true);
-						window[buttonId].classList.remove('is-loading');
+						getElement(buttonId).classList.remove('is-loading');
 					}
 				}
 			});
@@ -538,17 +549,17 @@
 	};
 
 	var activateModal  = function(open, modal, close) {
-		window[open].addEventListener('click', function() {
-			window[modal].classList.add('is-active');
+		getElement(open).addEventListener('click', function() {
+			getElement(modal).classList.add('is-active');
 		});
-		window[close].addEventListener('click', function() {
-			window[modal].classList.remove('is-active');
+		getElement(close).addEventListener('click', function() {
+			getElement(modal).classList.remove('is-active');
 		});
 	};
 
 	var activateCopy = function(copy, value) {
-		window[copy].addEventListener('click', function() {
-			window[value].select();
+		getElement(copy).addEventListener('click', function() {
+			getElement(value).select();
 			document.execCommand('copy');
 		});
 	};
@@ -557,28 +568,28 @@
 		var buttonId = 'x-guest-' + method;
 		var formId = buttonId + '-form';
 
-		window[buttonId].addEventListener('click', function() {
-			window[formId].classList.remove('is-hidden');
-			window['x-guest-modal'].classList.add('is-active');
+		getElement(buttonId).addEventListener('click', function() {
+			getElement(formId).classList.remove('is-hidden');
+			getElement('x-guest-modal').classList.add('is-active');
 		});
 		
-		window[formId].addEventListener('submit', function(event) {
+		getElement(formId).addEventListener('submit', function(event) {
 			event.preventDefault();
 
-			window[formId + '-submit'].classList.add('is-loading');
+			getElement(formId + '-submit').classList.add('is-loading');
 
-			ajaxPost('/api/v1/' + method + '.php', 'EMAIL=' + window[formId + '-email'].value + '&PASSWORD=' + window[formId + '-password'].value, function() {
+			ajaxPost('/api/v1/' + method + '.php', 'EMAIL=' + getElement(formId + '-email').value + '&PASSWORD=' + getElement(formId + '-password').value, function() {
 				if (this.readyState === 4 && this.status === 200) {
 					var responseJSON = JSON.parse(this.response);
 
-					window[formId + '-submit'].classList.remove('is-loading');
-					window['x-guest-error'].classList.add('is-hidden');
+					getElement(formId + '-submit').classList.remove('is-loading');
+					getElement('x-guest-error').classList.add('is-hidden');
 
 					if (responseJSON.hasOwnProperty('ERROR') === true) {
-						window['x-guest-error'].classList.remove('is-hidden');
-						window['x-guest-error'].textContent = responseJSON['TEXT'];
+						getElement('x-guest-error').classList.remove('is-hidden');
+						getElement('x-guest-error').textContent = responseJSON['TEXT'];
 					} else {
-						window['x-guest-modal'].classList.remove('is-active');
+						getElement('x-guest-modal').classList.remove('is-active');
 						showPreviousPage();
 					}
 				}
@@ -587,43 +598,43 @@
 	};
 
 	document.addEventListener('DOMContentLoaded', function() {
-		window['x-sites-0'].addEventListener('click', function() {
+		getElement('x-sites-0').addEventListener('click', function() {
 			startApp('0');
 		});
 
-		window['x-sites-1'].addEventListener('click', function() {
+		getElement('x-sites-1').addEventListener('click', function() {
 			startApp('1');
 		});
 
-		window['x-previous'].addEventListener('click', showPreviousPage);
-		window['x-main'].addEventListener('click', showMainPage);
-		window['x-user'].addEventListener('click', showUserPage);
-		window['x-search'].addEventListener('click', showSearchPage);
+		getElement('x-previous').addEventListener('click', showPreviousPage);
+		getElement('x-main').addEventListener('click', showMainPage);
+		getElement('x-user').addEventListener('click', showUserPage);
+		getElement('x-search').addEventListener('click', showSearchPage);
 
-		window['x-error-modal-close'].addEventListener('click', function() {
-			window['x-error-modal'].classList.remove('is-active');
+		getElement('x-error-modal-close').addEventListener('click', function() {
+			getElement('x-error-modal').classList.remove('is-active');
 			showPreviousPage();
 		});
 
-		window['x-guest-modal-close'].addEventListener('click', function() {
-			window['x-guest-modal'].classList.remove('is-active');
-			window['x-guest-signin-form'].classList.add('is-hidden');
-			window['x-guest-signup-form'].classList.add('is-hidden');
-			window['x-guest-error'].classList.add('is-hidden');
+		getElement('x-guest-modal-close').addEventListener('click', function() {
+			getElement('x-guest-modal').classList.remove('is-active');
+			getElement('x-guest-signin-form').classList.add('is-hidden');
+			getElement('x-guest-signup-form').classList.add('is-hidden');
+			getElement('x-guest-error').classList.add('is-hidden');
 		});
 
-		window['x-navbar-burger'].addEventListener('click', function() {
-			window['x-navbar-menu'].classList.toggle('is-active');
+		getElement('x-navbar-burger').addEventListener('click', function() {
+			getElement('x-navbar-menu').classList.toggle('is-active');
 		});
 
-		window['x-search-input'].addEventListener('keyup', function() {
-			window['x-search-control'].classList.add('is-loading');
+		getElement('x-search-input').addEventListener('keyup', function() {
+			getElement('x-search-control').classList.add('is-loading');
 
-			var search = window['x-search-input'].value.toLowerCase().replace(/[^0-9a-zа-я]/g, '');
+			var search = getElement('x-search-input').value.toLowerCase().replace(/[^0-9a-zа-я]/g, '');
 
 			if (search.length !== 0) {
-				while (window['x-search-cards'].firstChild !== null) {
-					window['x-search-cards'].removeChild(window['x-search-cards'].firstChild);
+				while (getElement('x-search-cards').firstChild !== null) {
+					getElement('x-search-cards').removeChild(getElement('x-search-cards').firstChild);
 				}
 
 				for (var i = 0, iMax = appPageJSON[0].length, results = 0; i !== iMax && results !== 60; i++) {
@@ -633,19 +644,19 @@
 					}
 				}
 
-				window['x-search-control'].classList.remove('is-loading');
+				getElement('x-search-control').classList.remove('is-loading');
 			}
 		});
 
-		window['x-content-online'].addEventListener('click', showOnlinePage);
+		getElement('x-content-online').addEventListener('click', showOnlinePage);
 
-		window['x-content-trailer'].addEventListener('click', function() {
-			window['x-trailer-iframe'].src = 'https://egeria.space/?' + appPageJSON['TRAILER'];
-			window['x-trailer-modal'].classList.add('is-active');
+		getElement('x-content-trailer').addEventListener('click', function() {
+			getElement('x-trailer-iframe').src = 'https://egeria.space/?' + appPageJSON['TRAILER'];
+			getElement('x-trailer-modal').classList.add('is-active');
 		});
-		window['x-trailer-modal-close'].addEventListener('click', function() {
-			window['x-trailer-iframe'].src = '';
-			window['x-trailer-modal'].classList.remove('is-active');
+		getElement('x-trailer-modal-close').addEventListener('click', function() {
+			getElement('x-trailer-iframe').src = 'data:,';
+			getElement('x-trailer-modal').classList.remove('is-active');
 		});
 
 		selectedTab['main'] = 'x-main-tab-0';
@@ -678,6 +689,6 @@
 		activateGuestForm('signin');
 		activateGuestForm('signup');
 
-		window['x-pageloader'].classList.remove('is-active');
+		getElement('x-pageloader').classList.remove('is-active');
 	});
 })();
