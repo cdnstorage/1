@@ -206,7 +206,8 @@
 							getElement('x-online-sources').appendChild(getElement('x-source-template').content.cloneNode(true));
 							var node = getElement('x-online-sources').lastElementChild;
 							var tags = node.querySelector('.js-tags');
-							var button = node.querySelector('.js-button');
+							var play = node.querySelector('.js-play');
+							node.querySelector('.js-proxy').href = 'http://egeria.space/?' + appPageJSON[i]['DATA'];
 							node.querySelector('.js-translator').textContent = appPageJSON[i]['TRANSLATOR'];
 							tags.appendChild(sourceTagHTML('Сервер №' + appPageJSON[i]['SERVER']));
 							tags.appendChild(sourceTagHTML('Дата: ' + appPageJSON[i]['TIMESTAMP']));
@@ -220,8 +221,8 @@
 							if (appPageJSON[i].hasOwnProperty('DIRECTORS_VERSION') === true && appPageJSON[i]['DIRECTORS_VERSION'] === '1') {
 								tags.appendChild(sourceTagHTML('Расширенная версия'));
 							}
-							button.setAttribute('data-url', appPageJSON[i]['DATA']);
-							button.addEventListener('click', function () {
+							play.setAttribute('data-url', appPageJSON[i]['DATA']);
+							play.addEventListener('click', function () {
 								if (selectedSource !== null) {
 									selectedSource.removeAttribute('disabled');
 									selectedSource.children[0].classList.remove('is-hidden');
