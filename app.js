@@ -207,7 +207,11 @@
 							var node = getElement('x-online-sources').lastElementChild;
 							var tags = node.querySelector('.js-tags');
 							var play = node.querySelector('.js-play');
-							node.querySelector('.js-proxy').href = 'http://egeria.space/?' + appPageJSON[i]['DATA'];
+							if(appPageJSON[i].hasOwnProperty('PROXY') === true) {
+								var proxy = node.querySelector('.js-proxy');
+								proxy.href = 'http://egeria.space/?' + appPageJSON[i]['PROXY'];
+								proxy.classList.remove('is-static');
+							}
 							node.querySelector('.js-translator').textContent = appPageJSON[i]['TRANSLATOR'];
 							tags.appendChild(sourceTagHTML('Сервер №' + appPageJSON[i]['SERVER']));
 							tags.appendChild(sourceTagHTML('Дата: ' + appPageJSON[i]['TIMESTAMP']));
