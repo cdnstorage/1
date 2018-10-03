@@ -97,8 +97,8 @@
 	var insertCards = function (prefix) {
 		for (var i = 0, iMax = appPageJSON.length; i !== iMax; i++) {
 			var id = prefix + i.toString();
-			while (getElement(id).firstChild !== null) {
-				getElement(id).removeChild(getElement(id).firstChild);
+			while (getElement(id).lastElementChild !== null) {
+				getElement(id).lastElementChild.remove();
 			}
 			for (var j = 0, jMax = appPageJSON[i].length; j !== jMax; j++) {
 				insertCard(id, appPageJSON[i][j]);
@@ -199,8 +199,8 @@
 					} else if (appPageJSON.hasOwnProperty('ERROR') === true) {
 						showError(appPageJSON['TEXT']);
 					} else if (appType === '0') {
-						while (getElement('x-online-sources').firstChild !== null) {
-							getElement('x-online-sources').removeChild(getElement('x-online-sources').firstChild);
+						while (getElement('x-online-sources').lastElementChild !== null) {
+							getElement('x-online-sources').lastElementChild.remove();
 						}
 						for (var i = 0, iMax = appPageJSON.length; i !== iMax; i++) {
 							getElement('x-online-sources').appendChild(getElement('x-source-template').content.cloneNode(true));
@@ -243,24 +243,24 @@
 						}
 						getElement('x-online-sources').classList.remove('is-hidden');
 					} else if (appType === '1') {
-						while (getElement('x-online-translators').firstChild !== null) {
-							getElement('x-online-translators').removeChild(getElement('x-online-translators').firstChild);
+						while (getElement('x-online-translators').lastElementChild !== null) {
+							getElement('x-online-translators').lastElementChild.remove();
 						}
-						while (getElement('x-online-seasons').firstChild !== null) {
-							getElement('x-online-seasons').removeChild(getElement('x-online-seasons').firstChild);
+						while (getElement('x-online-seasons').lastElementChild !== null) {
+							getElement('x-online-seasons').lastElementChild.remove();
 						}
-						while (getElement('x-online-episodes').firstChild !== null) {
-							getElement('x-online-episodes').removeChild(getElement('x-online-episodes').firstChild);
+						while (getElement('x-online-episodes').lastElementChild !== null) {
+							getElement('x-online-episodes').lastElementChild.remove();
 						}
 						for (var i = 0, iMax = appPageJSON.length; i !== iMax; i++) {
 							select(appPageJSON[i]['TRANSLATOR'], i, 'x-online-translators').addEventListener('click', function () {
 								if (selectedTranslator !== null) {
 									selectedTranslator.classList.remove('is-active');
-									while (getElement('x-online-seasons').firstChild !== null) {
-										getElement('x-online-seasons').removeChild(getElement('x-online-seasons').firstChild);
+									while (getElement('x-online-seasons').lastElementChild !== null) {
+										getElement('x-online-seasons').lastElementChild.remove();
 									}
-									while (getElement('x-online-episodes').firstChild !== null) {
-										getElement('x-online-episodes').removeChild(getElement('x-online-episodes').firstChild);
+									while (getElement('x-online-episodes').lastElementChild !== null) {
+										getElement('x-online-episodes').lastElementChild.remove();
 									}
 								}
 								selectedTranslator = this;
@@ -269,8 +269,8 @@
 									select(appPageJSON[iCache]['SEASONS'][j]['SEASON'] + ' сезон', j, 'x-online-seasons').addEventListener('click', function () {
 										if (selectedSeason !== null) {
 											selectedSeason.classList.remove('is-active');
-											while (getElement('x-online-episodes').firstChild !== null) {
-												getElement('x-online-episodes').removeChild(getElement('x-online-episodes').firstChild);
+											while (getElement('x-online-episodes').lastElementChild !== null) {
+												getElement('x-online-episodes').lastElementChild.remove();
 											}
 										}
 										selectedSeason = this;
@@ -332,8 +332,8 @@
 							getElement('x-content-trailer').classList.add('is-hidden');
 						}
 						ajaxPost('/api/v1/online.php', appOnline);
-						while (getElement('x-content-tags').firstChild !== null) {
-							getElement('x-content-tags').removeChild(getElement('x-content-tags').firstChild);
+						while (getElement('x-content-tags').lastElementChild !== null) {
+							getElement('x-content-tags').lastElementChild.remove();
 						}
 						getElement('x-content-tags').appendChild(tagHTML(appPageJSON['CONTENT']['YEAR']));
 						insertContentTags(appPageJSON['GENRES']);
@@ -540,8 +540,8 @@
 			getElement('x-search-control').classList.add('is-loading');
 			var search = getElement('x-search-input').value.toLowerCase().replace(/[^0-9a-zа-я]/g, '');
 			if (search.length !== 0) {
-				while (getElement('x-search-cards').firstChild !== null) {
-					getElement('x-search-cards').removeChild(getElement('x-search-cards').firstChild);
+				while (getElement('x-search-cards').lastElementChild !== null) {
+					getElement('x-search-cards').lastElementChild.remove();
 				}
 				for (var i = 0, iMax = appPageJSON[0].length, results = 0; i !== iMax && results !== 60; i++) {
 					if (appPageJSON[0][i]['SEARCH'].indexOf(search) !== -1) {
